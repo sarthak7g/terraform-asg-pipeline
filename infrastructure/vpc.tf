@@ -25,13 +25,13 @@ resource "aws_subnet" "public" {
     "name" = "cryptern-public-subnet.${var.env}"
   }
 }
-# resource "aws_internet_gateway" "igw" {
-#   vpc_id = aws_vpc.cryptern-vpc.id
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.cryptern-vpc.id
 
-#   tags = {
-#     name = "cryptern-igw.${var.env}"
-#   }
-# }
+  tags = {
+    name = "cryptern-igw.${var.env}"
+  }
+}
 # resource "aws_nat_gateway" "nat" {
 #   connectivity_type = "private"
 #   subnet_id         = element()
