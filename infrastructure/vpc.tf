@@ -32,7 +32,8 @@ resource "aws_internet_gateway" "igw" {
     name = "cryptern-igw.${var.env}"
   }
 }
-# resource "aws_nat_gateway" "nat" {
-#   connectivity_type = "private"
-#   subnet_id         = element()
-# }
+resource "aws_nat_gateway" "nat" {
+  count             = length(var.privateSubnets)
+  connectivity_type = "private"
+  subnet_id         = element(aws_subnet.private, count.index).id
+}
