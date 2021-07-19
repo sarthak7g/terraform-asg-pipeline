@@ -98,4 +98,69 @@ resource "aws_route_table_association" "private-subnet-route-table" {
   subnet_id      = element(aws_subnet.private, count.index).id
   route_table_id = element(aws_route_table.private-route-table, count.index).id
 }
+resource "aws_security_group" "private-sg" {
+  name   = "cryptern-private-sg.${var.env}"
+  vpc_id = aws_vpc.cryptern-vpc.id
+  depends_on = [
+    aws_vpc.cryptern-vpc,
+    aws_security_group.public-sg
+  ]
+  egress = [{
+    description      = "Allow all outbound traffic"
+    prefix_list_ids  = []
+    security_groups  = []
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    self             = true
+  }]
+  ingress = [{
+    description      = "Allow inbound traffic from only public security group"
+    prefix_list_ids  = []
+    security_groups  = [aws_security_group.public-sg.id]
+    self             = true
+    cidr_blocks      = []
+    ipv6_cidr_blocks = []
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+  }]
+  tags = {
+    "name" = "cryptern-private-sg.${var.env}"
+  }
+}
+resource "aws_security_group" "public-sg" {
+  name   = "cryptern-public-sg.${var.env}"
+  vpc_id = aws_vpc.cryptern-vpc.id
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
+  egress = [{
+    description      = "Allow all outbound traffic"
+    prefix_list_ids  = []
+    security_groups  = []
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    self             = true
+  }]
+  ingress = [{
+    description      = "Allow all inbound traffic"
+    prefix_list_ids  = []
+    security_groups  = []
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+    from_port        = 0
+    protocol         = "-1"
+    self             = true
+    to_port          = 0
+  }]
+  tags = {
+    "name" = "cryptern-public-sg.${var.env}"
+  }
+}
 
