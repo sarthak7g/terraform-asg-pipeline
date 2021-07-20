@@ -4,30 +4,42 @@ resource "aws_vpc" "cryptern-vpc" {
     "name" = "cryptern-vpc.${var.env}"
   }
 }
+/*
+  Here we are passing subnet cidrs as array because there can be multiple availability zones and hence mulitple cidr blocks for subnets
+*/
 resource "aws_subnet" "private" {
   count                   = length(var.privateSubnets)
   vpc_id                  = aws_vpc.cryptern-vpc.id
   cidr_block              = var.privateSubnets[count.index]
   map_public_ip_on_launch = false
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
 
   tags = {
     "name" = "cryptern-public-subnet.${var.env}"
   }
 }
-
+/*
+  Here we are passing subnet cidrs as array because there can be multiple availability zones and hence mulitple cidr blocks for subnets
+*/
 resource "aws_subnet" "public" {
   count                   = length(var.publicSubnets)
   vpc_id                  = aws_vpc.cryptern-vpc.id
   cidr_block              = var.publicSubnets[count.index]
   map_public_ip_on_launch = true
-
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
   tags = {
     "name" = "cryptern-public-subnet.${var.env}"
   }
 }
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.cryptern-vpc.id
-
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
   tags = {
     name = "cryptern-igw.${var.env}"
   }
@@ -36,6 +48,9 @@ resource "aws_nat_gateway" "nat" {
   count             = length(var.privateSubnets)
   connectivity_type = "private"
   subnet_id         = element(aws_subnet.private, count.index).id
+  depends_on = [
+    aws_subnet.private
+  ]
   tags = {
     name = "cryptern-nat.${var.env}"
   }
@@ -54,7 +69,9 @@ private subnet  ----- its route tabel ---- private route table   Destination ---
 resource "aws_route_table" "public-route-table" {
   count  = length(var.publicSubnets)
   vpc_id = aws_vpc.cryptern-vpc.id
-
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
   tags = {
     name = "cryptern-public-route-table.${var.env}"
   }
@@ -78,7 +95,9 @@ resource "aws_route_table_association" "public-subnet-route-table" {
 resource "aws_route_table" "private-route-table" {
   count  = length(var.privateSubnets)
   vpc_id = aws_vpc.cryptern-vpc.id
-
+  depends_on = [
+    aws_vpc.cryptern-vpc
+  ]
   tags = {
     name = "cryptern-private-route-table.${var.env}"
   }
