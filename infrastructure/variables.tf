@@ -10,3 +10,10 @@ variable "privateSubnets" {
 variable "publicSubnets" {
   type = list(string)
 }
+
+variable "jumpServerInstanceType" {
+
+}
+variable "publicKeyFileLocation" {
+
+}
