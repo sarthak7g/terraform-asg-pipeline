@@ -56,3 +56,50 @@ resource "aws_iam_role_policy_attachment" "terraform-state-read-write" {
   role       = aws_iam_role.admin-role.name
   policy_arn = aws_iam_policy.terraform-state-rw.arn
 }
+resource "aws_iam_role" "instance-role" {
+  name = "instance-role-${var.env}"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Action" : "sts:AssumeRole",
+        "Principal" : {
+          "Service" : "ec2.amazonaws.com"
+        },
+        "Effect" : "Allow",
+        "Sid" : ""
+      }
+    ]
+  })
+
+  tags = {
+    "name" = "instance-role-${var.env}"
+  }
+}
+resource "aws_iam_policy" "s3-read" {
+  name        = "s3-read-only-${var.env}"
+  description = "Read only full access to s3"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:Get*",
+          "s3:List*"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+
+}
+resource "aws_iam_role_policy_attachment" "s3-read" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.s3-read.arn
+}
+resource "aws_iam_instance_profile" "instance-profile" {
+  name = "instance-profile-${var.env}"
+  role = aws_iam_role.instance-role.name
+}
