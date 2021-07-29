@@ -1,7 +1,3 @@
-provider "aws" {
-  region  = var.region
-  profile = "cryptern"
-}
 terraform {
   required_providers {
     aws = {
