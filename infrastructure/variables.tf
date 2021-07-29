@@ -14,6 +14,6 @@ variable "publicSubnets" {
 variable "jumpServerInstanceType" {
 
 }
-variable "publicKeyFileLocation" {
+variable "publicKey" {
 
 }

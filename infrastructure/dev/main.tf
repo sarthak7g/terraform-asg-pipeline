@@ -5,5 +5,5 @@ module "cryptern-infra" {
   privateSubnets         = ["10.0.0.0/24"]
   publicSubnets          = ["10.0.1.0/24"]
   jumpServerInstanceType = "t2.micro"
-  publicKeyFileLocation  = "/home/zaid/.ssh/id_rsa.pub"
+  publicKey              = file("/home/zaid/.ssh/id_rsa.pub")
 }
