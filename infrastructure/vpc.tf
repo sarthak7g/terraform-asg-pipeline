@@ -17,7 +17,7 @@ resource "aws_subnet" "private" {
   ]
 
   tags = {
-    "name" = "cryptern-public-subnet.${var.env}"
+    "name" = "cryptern-private-subnet.${var.env}"
   }
 }
 /*
@@ -44,12 +44,21 @@ resource "aws_internet_gateway" "igw" {
     name = "cryptern-igw.${var.env}"
   }
 }
+resource "aws_eip" "nat-eip" {
+  count = length(var.publicSubnets)
+  vpc   = true
+  tags = {
+    "name" = "cryptern-nat-eip.${var.env}"
+  }
+}
 resource "aws_nat_gateway" "nat" {
-  count             = length(var.privateSubnets)
-  connectivity_type = "private"
-  subnet_id         = element(aws_subnet.private, count.index).id
+  count             = length(var.publicSubnets)
+  connectivity_type = "public"
+  subnet_id         = element(aws_subnet.public, count.index).id
+  allocation_id     = element(aws_eip.nat-eip, count.index).id
   depends_on = [
-    aws_subnet.private
+    aws_subnet.public,
+    aws_eip.nat-eip
   ]
   tags = {
     name = "cryptern-nat.${var.env}"
