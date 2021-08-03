@@ -12,6 +12,21 @@ function installdep() {
         apt-get -y update
         # Satisfying even ubuntu older versions.
         apt-get -y install jq awscli ruby2.0 || apt-get -y install jq awscli ruby
+        echo "Installed Ruby and AWSCLI"
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+        echo "NVM Downloaded"
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+        nvm install v10.19.0
+        echo "Installed Node v10.19.0"
+        npm install pm2 -g
+        echo "Installed PM2"
+        #Add nvm for ec2 user
+        cat <<EOF >>/home/ubuntu/.bashrc
+export NVM_DIR="/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+EOF
 
     elif
 

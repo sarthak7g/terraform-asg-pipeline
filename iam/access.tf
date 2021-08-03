@@ -103,3 +103,33 @@ resource "aws_iam_instance_profile" "instance-profile" {
   name = "instance-profile-${var.env}"
   role = aws_iam_role.instance-role.name
 }
+resource "aws_iam_policy" "parameters-read" {
+  name        = "ParameterReadDecrypt.${var.env}"
+  description = "Read and Decrypt Params from Parameter store"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : "ssm:DescribeParameters",
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "kms:Decrypt",
+          "ssm:GetParameters"
+        ],
+        "Resource" : [
+          "arn:aws:ssm:*:${data.aws_caller_identity.current.account_id}:parameter/*_${var.env}",
+          "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+        ]
+      }
+    ]
+  })
+
+}
+resource "aws_iam_role_policy_attachment" "parameters-read" {
+  role       = aws_iam_role.instance-role.name
+  policy_arn = aws_iam_policy.parameters-read.arn
+}
