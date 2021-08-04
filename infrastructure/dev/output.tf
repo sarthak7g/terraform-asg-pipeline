@@ -8,3 +8,9 @@ output "private-sg" {
 output "private-subnet" {
   value = module.cryptern-infra.private-subnet
 }
+output "vpc" {
+  value = module.cryptern-infra.vpc
+}
+output "public-subnet" {
+  value = module.cryptern-infra.public-subnet
+}

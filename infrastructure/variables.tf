@@ -17,3 +17,6 @@ variable "jumpServerInstanceType" {
 variable "publicKey" {
 
 }
+variable "availabilityZones" {
+
+}

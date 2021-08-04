@@ -8,3 +8,9 @@ output "private-sg" {
 output "private-subnet" {
   value = aws_subnet.private
 }
+output "vpc" {
+  value = aws_vpc.cryptern-vpc.id
+}
+output "public-subnet" {
+  value = aws_subnet.public
+}

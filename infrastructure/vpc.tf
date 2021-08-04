@@ -9,6 +9,7 @@ resource "aws_vpc" "cryptern-vpc" {
 */
 resource "aws_subnet" "private" {
   count                   = length(var.privateSubnets)
+  availability_zone       = var.availabilityZones[count.index]
   vpc_id                  = aws_vpc.cryptern-vpc.id
   cidr_block              = var.privateSubnets[count.index]
   map_public_ip_on_launch = false
@@ -25,6 +26,7 @@ resource "aws_subnet" "private" {
 */
 resource "aws_subnet" "public" {
   count                   = length(var.publicSubnets)
+  availability_zone       = var.availabilityZones[count.index]
   vpc_id                  = aws_vpc.cryptern-vpc.id
   cidr_block              = var.publicSubnets[count.index]
   map_public_ip_on_launch = true
