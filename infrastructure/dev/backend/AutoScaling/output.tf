@@ -1,3 +1,3 @@
-# output "reference-instance-backend-ami" {
-#   value = module.cryptern-infra-backend-static.reference-instance-backend-ami
-# }
+output "reference-instance-image-backend" {
+  value = module.cryptern-infra-backend-autoscaling.reference-instance-image-backend
+}
