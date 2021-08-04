@@ -22,7 +22,6 @@ function installdep() {
         echo "Installed Node v10.19.0"
         npm install pm2 -g
         echo "Installed PM2"
-        #Add nvm for ec2 user
         cat <<EOF >>/home/ubuntu/.bashrc
 export NVM_DIR="/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
