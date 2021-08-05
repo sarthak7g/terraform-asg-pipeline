@@ -14,6 +14,11 @@ module "cryptern-infra-backend-autoscaling" {
   publicSubnet           = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.public-subnet : subnet.id]
   vpc                    = data.terraform_remote_state.cryptern-infra-data.outputs.vpc
   protocolType           = "HTTP"
-  port                   = 80
+  backendPorts           = [3000, 3002]
+  appNames               = ["api", "socket"]
   loadBalancerPort       = 80
+  hostNames              = ["cryptern-api-dev.primathon.in", "crypterns-socket.primathon.in"]
+  fixedResponseType      = "application/json"
+  fixedResponseMessage   = "Success"
+  fixedResponseStatus    = 200
 }
