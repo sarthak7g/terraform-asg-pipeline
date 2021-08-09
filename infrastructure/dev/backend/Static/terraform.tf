@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.0.2"
+  required_version = "~>1.0.2"
   backend "s3" {
     bucket         = "tf-remote-state.cryptern.dev"
     key            = "infrastructure-cryptern-static-backend.dev.tfstate"

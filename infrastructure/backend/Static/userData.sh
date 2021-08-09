@@ -21,7 +21,8 @@ function installdep() {
         nvm install v10.19.0
         echo "Installed Node v10.19.0"
         npm install pm2 -g
-        echo "Installed PM2"
+        npm install -g typescript
+        echo "Installed PM2 adn type script"
         cat <<EOF >>/home/ubuntu/.bashrc
 export NVM_DIR="/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"

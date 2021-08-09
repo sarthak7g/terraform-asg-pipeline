@@ -23,3 +23,6 @@ variable "amiId" {
 variable "instanceProfileName" {
 
 }
+variable "part" {
+  
+}
