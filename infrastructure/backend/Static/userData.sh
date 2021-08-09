@@ -21,6 +21,7 @@ function installdep() {
         nvm install v10.19.0
         echo "Installed Node v10.19.0"
         npm install pm2 -g
+        sudo env PATH=$PATH:/.nvm/versions/node/v10.19.0/bin /.nvm/versions/node/v10.19.0/lib/node_modules/pm2/bin/^C2 startup systemd -u ubuntu --hp /home/ubuntu
         npm install -g typescript
         echo "Installed PM2 adn type script"
         cat <<EOF >>/home/ubuntu/.bashrc
