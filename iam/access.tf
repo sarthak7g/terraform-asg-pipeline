@@ -157,3 +157,126 @@ resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
   role       = aws_iam_role.codedeploy.name
 }
+resource "aws_iam_role" "codepipeline-backend-role" {
+  name = "codepipeline-backend-role-${var.env}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+resource "aws_iam_role" "codepipeline-frontend-role" {
+  name = "codepipeline-frontend-role-${var.env}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codepipeline.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "codepipeline-backend-policy" {
+
+  name = "codepipeline-backend-policy-${var.env}"
+
+  policy = jsonencode(
+    {
+      "Statement" : [
+        {
+          "Action" : [
+            "codepipeline:*",
+            "codedeploy:GetApplication",
+            "codedeploy:BatchGetApplications",
+            "codedeploy:GetDeploymentGroup",
+            "codedeploy:BatchGetDeploymentGroups",
+            "codedeploy:ListApplications",
+            "codedeploy:ListDeploymentGroups",
+            "s3:GetBucketPolicy",
+            "s3:GetBucketVersioning",
+            "s3:GetObjectVersion",
+            "s3:ListAllMyBuckets",
+            "s3:ListBucket",
+          ],
+          "Effect" : "Allow",
+          "Resource" : "*"
+        },
+        {
+          "Action" : [
+            "s3:GetObject",
+            "s3:CreateBucket",
+            "s3:PutBucketPolicy"
+          ],
+          "Effect" : "Allow",
+          "Resource" : ["arn:aws:s3::*:deployment-cryptern-backend-${var.env}", "arn:aws:s3::*:codepipeline-cryptern-backend-${var.env}"]
+        },
+      ],
+      "Version" : "2012-10-17"
+    }
+  )
+}
+resource "aws_iam_policy" "codepipeline-frontend-policy" {
+
+  name = "codepipeline-frontend-policy-${var.env}"
+
+  policy = jsonencode(
+    {
+      "Statement" : [
+        {
+          "Action" : [
+            "codepipeline:*",
+            "codedeploy:GetApplication",
+            "codedeploy:BatchGetApplications",
+            "codedeploy:GetDeploymentGroup",
+            "codedeploy:BatchGetDeploymentGroups",
+            "codedeploy:ListApplications",
+            "codedeploy:ListDeploymentGroups",
+            "s3:GetBucketPolicy",
+            "s3:GetBucketVersioning",
+            "s3:GetObjectVersion",
+            "s3:ListAllMyBuckets",
+            "s3:ListBucket",
+          ],
+          "Effect" : "Allow",
+          "Resource" : "*"
+        },
+        {
+          "Action" : [
+            "s3:GetObject",
+            "s3:CreateBucket",
+            "s3:PutBucketPolicy"
+          ],
+          "Effect" : "Allow",
+          "Resource" : ["arn:aws:s3::*:deployment-cryptern-frontend-${var.env}", "arn:aws:s3::*:codepipeline-cryptern-frontend-${var.env}"]
+        },
+      ],
+      "Version" : "2012-10-17"
+    }
+  )
+}
+resource "aws_iam_role_policy_attachment" "codepipeline-backend-policy-attachment" {
+  role       = aws_iam_role.codepipeline-backend-role.name
+  policy_arn = aws_iam_policy.codepipeline-backend-policy.arn
+}
+resource "aws_iam_role_policy_attachment" "codepipeline-frontend-policy-attachment" {
+  role       = aws_iam_role.codepipeline-frontend-role.name
+  policy_arn = aws_iam_policy.codepipeline-frontend-policy.arn
+}
