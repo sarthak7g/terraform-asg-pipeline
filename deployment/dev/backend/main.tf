@@ -8,5 +8,5 @@ module "cryptern-deployment-backend" {
   asg                  = data.terraform_remote_state.cryptern-infra-backend-autoscaling.outputs.asg.name
   targetGroup          = data.terraform_remote_state.cryptern-infra-backend-autoscaling.outputs.targetGroup[0].name
   codepipelineRoleArn  = data.terraform_remote_state.cryptern-iam-data.outputs.codepipeline-backend-role.arn
-  appZip               = "cryptern-api.zip"
+  appZip               = "crypterns-api.zip"
 }
