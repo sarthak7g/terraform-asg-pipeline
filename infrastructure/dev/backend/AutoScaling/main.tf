@@ -3,8 +3,8 @@ module "cryptern-infra-backend-autoscaling" {
   env                    = "dev"
   region                 = "us-east-1"
   referenceInstanceAmi   = data.terraform_remote_state.cryptern-static-backend-data.outputs.reference-instance-backend.id
-  securityGroupId        = [data.terraform_remote_state.cryptern-infra-data.outputs.private-sg.id]
-  instanceType           = "t2.micro"
+  privateSecurityGroupId = [data.terraform_remote_state.cryptern-infra-data.outputs.private-sg.id]
+  instanceType           = "t2.small"
   instanceProfileName    = data.terraform_remote_state.cryptern-iam-data.outputs.instance-profile.name
   maxSize                = 2
   minSize                = 1
@@ -21,4 +21,7 @@ module "cryptern-infra-backend-autoscaling" {
   fixedResponseType      = "application/json"
   fixedResponseMessage   = "Success"
   fixedResponseStatus    = 200
+  publicSecurityGroupId  = [data.terraform_remote_state.cryptern-infra-data.outputs.public-sg.id]
+  healthCheckPath        = ["/api", "/api"]
+  healthCheckPorts       = [3000, 3000]
 }

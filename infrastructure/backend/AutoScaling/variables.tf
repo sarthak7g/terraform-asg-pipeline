@@ -8,7 +8,7 @@ variable "region" {
 variable "referenceInstanceAmi" {
 
 }
-variable "securityGroupId" {
+variable "privateSecurityGroupId" {
   type = list(string)
 }
 variable "instanceType" {
@@ -63,5 +63,14 @@ variable "fixedResponseStatus" {
 
 }
 variable "fixedResponseMessage" {
+
+}
+variable "publicSecurityGroupId" {
+  type = list(string)
+}
+variable "healthCheckPath" {
+
+}
+variable "healthCheckPorts" {
 
 }

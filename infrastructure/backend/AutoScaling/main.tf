@@ -8,7 +8,7 @@ resource "aws_ami_from_instance" "reference-instance-image-backend" {
 resource "aws_launch_configuration" "launch-config-backend" {
   image_id             = aws_ami_from_instance.reference-instance-image-backend.id
   instance_type        = var.instanceType
-  security_groups      = var.securityGroupId
+  security_groups      = var.privateSecurityGroupId
   name                 = "launch-config-backend.${var.env}"
   iam_instance_profile = var.instanceProfileName
   depends_on = [
@@ -22,7 +22,7 @@ resource "aws_lb" "backend-lb" {
   name                       = "cryptern-backend-lb-${var.env}"
   internal                   = false
   load_balancer_type         = "application"
-  security_groups            = var.securityGroupId
+  security_groups            = var.publicSecurityGroupId
   subnets                    = var.publicSubnet
   enable_deletion_protection = false
   tags = {
@@ -36,7 +36,8 @@ resource "aws_lb_target_group" "backend-lb-tg" {
   protocol = var.protocolType
   vpc_id   = var.vpc
   health_check {
-    port    = element(var.backendPorts, count.index)
+    port = element(var.healthCheckPorts, count.index)
+    path = element(var.healthCheckPath, count.index)
   }
   tags = {
     "name" = "${element(var.appNames, count.index)}-backend-lb-tg-${var.env}"

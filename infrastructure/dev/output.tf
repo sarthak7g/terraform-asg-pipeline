@@ -14,3 +14,6 @@ output "vpc" {
 output "public-subnet" {
   value = module.cryptern-infra.public-subnet
 }
+output "public-sg" {
+  value = module.cryptern-infra.public-sg
+}

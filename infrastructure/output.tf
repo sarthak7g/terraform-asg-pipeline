@@ -14,3 +14,6 @@ output "vpc" {
 output "public-subnet" {
   value = aws_subnet.public
 }
+output "public-sg" {
+  value = aws_security_group.public-sg
+}
