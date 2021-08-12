@@ -9,7 +9,7 @@ module "cryptern-infra-backend-autoscaling" {
   maxSize                = 2
   minSize                = 1
   healthCheckGracePeriod = 300
-  healthCheckType        = "ELB"
+  healthCheckType        = "EC2"
   privateSubnet          = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.private-subnet : subnet.id]
   publicSubnet           = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.public-subnet : subnet.id]
   vpc                    = data.terraform_remote_state.cryptern-infra-data.outputs.vpc
@@ -24,4 +24,9 @@ module "cryptern-infra-backend-autoscaling" {
   publicSecurityGroupId  = [data.terraform_remote_state.cryptern-infra-data.outputs.public-sg.id]
   healthCheckPath        = ["/api", "/api"]
   healthCheckPorts       = [3000, 3000]
+  policyType             = "TargetTrackingScaling"
+  predefinedMetricType   = "ASGAverageCPUUtilization"
+  targetValue            = 75.0
+  disableScaleIn         = false
+
 }

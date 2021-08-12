@@ -93,3 +93,15 @@ resource "aws_autoscaling_group" "asg" {
     "name" = "asg-backend.${var.env}"
   }]
 }
+resource "aws_autoscaling_policy" "asg-policy" {
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+  name                   = "asg-policy-backend.${var.env}"
+  policy_type            = var.policyType
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = var.predefinedMetricType
+    }
+    target_value     = var.targetValue
+    disable_scale_in = var.disableScaleIn
+  }
+}

@@ -74,3 +74,15 @@ variable "healthCheckPath" {
 variable "healthCheckPorts" {
 
 }
+variable "policyType" {
+  type = string
+}
+variable "predefinedMetricType" {
+  type = string
+}
+variable "targetValue" {
+  type = number
+}
+variable "disableScaleIn" {
+  type = bool
+}
