@@ -12,6 +12,28 @@ function installdep() {
         apt-get -y update
         # Satisfying even ubuntu older versions.
         apt-get -y install jq awscli ruby2.0 || apt-get -y install jq awscli ruby
+        apt -y install nginx-full
+        touch /etc/nginx/conf.d/chat.conf
+        touch /etc/nginx/conf.d/api.conf
+        cat <<EOF >>/etc/nginx/conf.d/api.conf
+server {
+    server_name  crypterns-api-dev.primathon.in;
+
+
+    location / {
+        proxy_pass      http://127.0.0.1:3000;
+    }}
+EOF
+        cat <<EOF >>/etc/nginx/conf.d/chat.conf
+server {
+    server_name  crypterns-chat-dev.primathon.in;
+
+
+    location / {
+        proxy_pass      http://127.0.0.1:3002;
+    }}
+EOF
+        sudo service nginx reload
         echo "Installed Ruby and AWSCLI"
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
         echo "NVM Downloaded"
