@@ -60,7 +60,7 @@ resource "aws_lb_listener" "backend-lb-tg-listener" {
   ]
 }
 resource "aws_lb_listener_rule" "backend-lb-tg-listener-rule" {
-  count        = length(var.backendPorts)
+  count        = length(var.hostNames)
   listener_arn = aws_lb_listener.backend-lb-tg-listener.arn
 
   action {
