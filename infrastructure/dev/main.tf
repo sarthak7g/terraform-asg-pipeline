@@ -7,4 +7,5 @@ module "cryptern-infra" {
   publicSubnets          = ["10.0.1.0/24", "10.0.3.0/24"]
   jumpServerInstanceType = "t2.micro"
   publicKey              = file("/home/zaid/.ssh/id_rsa.pub")
+  vpcCidrBlock           = "10.0.0.0/16"
 }

@@ -20,3 +20,6 @@ variable "publicKey" {
 variable "availabilityZones" {
 
 }
+variable "vpcCidrBlock" {
+
+}

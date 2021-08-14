@@ -1,5 +1,5 @@
 resource "aws_vpc" "cryptern-vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpcCidrBlock
   tags = {
     "name" = "cryptern-vpc.${var.env}"
   }
@@ -47,17 +47,15 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 resource "aws_eip" "nat-eip" {
-  count = length(var.publicSubnets)
-  vpc   = true
+  vpc = true
   tags = {
     "name" = "cryptern-nat-eip.${var.env}"
   }
 }
 resource "aws_nat_gateway" "nat" {
-  count             = length(var.publicSubnets)
   connectivity_type = "public"
-  subnet_id         = element(aws_subnet.public, count.index).id
-  allocation_id     = element(aws_eip.nat-eip, count.index).id
+  subnet_id         = element(aws_subnet.public, 0).id
+  allocation_id     = aws_eip.nat-eip.id
   depends_on = [
     aws_subnet.public,
     aws_eip.nat-eip
@@ -117,7 +115,7 @@ resource "aws_route" "private-nat-route" {
   count                  = length(var.privateSubnets)
   route_table_id         = element(aws_route_table.private-route-table, count.index).id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.nat, count.index).id
+  nat_gateway_id         = aws_nat_gateway.nat.id
   depends_on             = [aws_route_table.private-route-table]
 }
 /*
