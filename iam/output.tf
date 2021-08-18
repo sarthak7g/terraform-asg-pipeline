@@ -10,3 +10,6 @@ output "codepipeline-backend-role" {
 output "codepipeline-frontend-role" {
   value = aws_iam_role.codepipeline-frontend-role
 }
+output "codebuild-frontend-role" {
+  value = aws_iam_role.codebuild-frontend-role
+}

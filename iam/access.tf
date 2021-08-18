@@ -562,3 +562,99 @@ resource "aws_iam_role_policy_attachment" "codepipeline-frontend-policy-attachme
   role       = aws_iam_role.codepipeline-frontend-role.name
   policy_arn = aws_iam_policy.codepipeline-frontend-policy.arn
 }
+resource "aws_iam_role" "codebuild-frontend-role" {
+  name = "codebuild-frontend-role-${var.env}"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "codebuild.amazonaws.com"
+        },
+        "Action" : "sts:AssumeRole"
+      }
+    ]
+  })
+}
+resource "aws_iam_policy" "codebuild-base-policy" {
+  name = "cryptern-codebuild-base-policy-${var.env}"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Resource" : [
+          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/cryptern-codebuild-${var.env}",
+          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/cryptern-codebuild-${var.env}:*"
+        ],
+        "Action" : [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Resource" : [
+          "arn:aws:s3:::codepipeline-cryptern-frontend-${var.env}*"
+        ],
+        "Action" : [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketAcl",
+          "s3:GetBucketLocation"
+        ]
+      }
+    ]
+  })
+}
+resource "aws_iam_policy" "codebuild-vpc-policy" {
+  name = "cryptern-codebuild-vpc-policy-${var.env}"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:CreateNetworkInterface",
+          "ec2:DescribeDhcpOptions",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeVpcs"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:CreateNetworkInterfacePermission"
+        ],
+        "Resource" : "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:network-interface/*",
+        "Condition" : {
+          "StringLike" : {
+            "ec2:Subnet" : [
+              "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:subnet/*"
+            ],
+            "ec2:AuthorizedService" : "codebuild.amazonaws.com"
+          }
+        }
+      }
+    ]
+  })
+}
+resource "aws_iam_role_policy_attachment" "codebuild-base-policy" {
+  role       = aws_iam_role.codebuild-frontend-role.name
+  policy_arn = aws_iam_policy.codebuild-base-policy.arn
+}
+resource "aws_iam_role_policy_attachment" "codebuild-vpc-policy" {
+  role       = aws_iam_role.codebuild-frontend-role.name
+  policy_arn = aws_iam_policy.codebuild-vpc-policy.arn
+}
+resource "aws_iam_role_policy_attachment" "codebuild-param-policy" {
+  role       = aws_iam_role.codebuild-frontend-role.name
+  policy_arn = aws_iam_policy.parameters-read.arn
+}
