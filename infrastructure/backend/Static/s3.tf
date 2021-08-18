@@ -26,7 +26,7 @@ resource "aws_s3_bucket_policy" "data-bucket-policy" {
           "AWS" : ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${data.aws_iam_user.backend-api-user.user_name}"]
         },
         "Action" : "s3:*",
-        "Resource" : ["${aws_s3_bucket.cryptern-data-bucket.arn}/*"],
+        "Resource" : ["${aws_s3_bucket.cryptern-data-bucket.arn}/*", "${aws_s3_bucket.cryptern-data-bucket.arn}"],
       }
     ]
   })

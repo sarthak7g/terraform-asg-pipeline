@@ -658,3 +658,41 @@ resource "aws_iam_role_policy_attachment" "codebuild-param-policy" {
   role       = aws_iam_role.codebuild-frontend-role.name
   policy_arn = aws_iam_policy.parameters-read.arn
 }
+resource "aws_iam_policy" "deployment-bucket-access-policy" {
+  name = "deployment-bucket-access-policy-${var.env}"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:ListStorageLensConfigurations",
+          "s3:ListAccessPointsForObjectLambda",
+          "s3:GetAccessPoint",
+          "s3:PutAccountPublicAccessBlock",
+          "s3:GetAccountPublicAccessBlock",
+          "s3:ListAllMyBuckets",
+          "s3:ListAccessPoints",
+          "s3:ListJobs",
+          "s3:PutStorageLensConfiguration",
+          "s3:CreateJob"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "s3:*",
+        "Resource" : [
+          "arn:aws:s3:::deployment-cryptern-backend-${var.env}/*",
+          "arn:aws:s3:::deployment-cryptern-backend-${var.env}",
+          "arn:aws:s3:::deployment-cryptern-frontend-${var.env}/*",
+          "arn:aws:s3:::deployment-cryptern-frontend-${var.env}"
+        ]
+      }
+    ]
+  })
+}
+resource "aws_iam_user_policy_attachment" "gitlab-user-policy" {
+  user       = data.aws_iam_user.gitlab.user_name
+  policy_arn = aws_iam_policy.deployment-bucket-access-policy.arn
+}
