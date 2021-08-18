@@ -1,5 +1,5 @@
 module "cryptern-deployment-backend" {
-  source               = "../../"
+  source               = "../../backend/"
   env                  = "dev"
   region               = "us-east-1"
   part                 = "backend"
