@@ -13,6 +13,5 @@ module "cryptern-deployment-frontend" {
   envVariables          = ["NEXT_PUBLIC_API_BASE_URL", "NEXT_PUBLIC_CHAT_BASE_URL"]
   vpc                   = data.terraform_remote_state.cryptern-infra-data.outputs.vpc
   privateSubnet         = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.private-subnet : subnet.id]
-  publicSubnet          = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.public-subnet : subnet.id]
   publicSecurityGroupId = [data.terraform_remote_state.cryptern-infra-data.outputs.public-sg.id]
 }

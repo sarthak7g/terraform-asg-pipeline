@@ -37,9 +37,6 @@ variable "vpc" {
 variable "privateSubnet" {
 
 }
-variable "publicSubnet" {
-
-}
 variable "publicSecurityGroupId" {
 
 }

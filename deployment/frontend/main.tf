@@ -64,7 +64,7 @@ resource "aws_codebuild_project" "codebuild-project" {
   vpc_config {
     vpc_id = var.vpc
 
-    subnets = concat(var.privateSubnet, var.publicSubnet)
+    subnets = var.privateSubnet
 
     security_group_ids = var.publicSecurityGroupId
 
