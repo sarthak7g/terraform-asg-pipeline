@@ -28,5 +28,5 @@ module "cryptern-infra-backend-autoscaling" {
   predefinedMetricType   = "ASGAverageCPUUtilization"
   targetValue            = 75.0
   disableScaleIn         = false
-
+  stickinessTime         = 3600
 }

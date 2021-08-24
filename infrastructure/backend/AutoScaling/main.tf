@@ -35,6 +35,11 @@ resource "aws_lb_target_group" "backend-lb-tg" {
   port     = element(var.backendPorts, count.index)
   protocol = var.protocolType
   vpc_id   = var.vpc
+  stickiness {
+    type            = "lb_cookie"
+    cookie_duration = var.stickinessTime
+    enabled         = true
+  }
   health_check {
     port = element(var.healthCheckPorts, count.index)
     path = element(var.healthCheckPath, count.index)
