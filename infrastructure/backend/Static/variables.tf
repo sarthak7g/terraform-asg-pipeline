@@ -24,5 +24,8 @@ variable "instanceProfileName" {
 
 }
 variable "part" {
-  
+
+}
+variable "redisNodeType" {
+
 }
