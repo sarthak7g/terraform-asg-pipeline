@@ -26,3 +26,9 @@ variable "instanceProfileName" {
 variable "part" {
   
 }
+variable "cmsSite" {
+  
+}
+variable "indexDocument" {
+  
+}
