@@ -57,6 +57,11 @@ resource "aws_codebuild_project" "codebuild-project" {
       value = "${element(var.envVariables, 1)}_${var.env}"
       type  = "PARAMETER_STORE"
     }
+    environment_variable {
+      name  = element(var.envVariables, 2)
+      value = "${element(var.envVariables, 2)}_${var.env}"
+      type  = "PARAMETER_STORE"
+    }
   }
   source {
     type = "CODEPIPELINE"

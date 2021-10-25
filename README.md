@@ -33,8 +33,9 @@ Replace <password> with the password for the crypterns-backend user. Replace myF
         c. run pm2 startup
 6. Create Autoscaling groups for frontend and backend
 7. Check Health status for target groups
-8. Create AWS CICD from deploymnet folder for frontend and backend
-9. Gitlab CI/CD setup
+8. You can check logs for code deploy --> /opt/codedeploy-agent/deployment-root/deployment-logs
+9. Create AWS CICD from deploymnet folder for frontend and backend
+10. Gitlab CI/CD setup
 
 # VPC
 
