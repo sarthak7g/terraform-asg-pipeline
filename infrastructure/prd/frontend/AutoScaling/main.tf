@@ -7,7 +7,7 @@ module "cryptern-infra-frontend-autoscaling" {
   instanceType           = "t3a.medium"
   instanceProfileName    = data.terraform_remote_state.cryptern-iam-data.outputs.instance-profile.name
   maxSize                = 10
-  minSize                = 1
+  minSize                = 2
   healthCheckGracePeriod = 300
   healthCheckType        = "ELB"
   privateSubnet          = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.private-subnet : subnet.id]
@@ -17,7 +17,7 @@ module "cryptern-infra-frontend-autoscaling" {
   frontendPorts           = [3000]
   appNames               = ["cryptern"]
   loadBalancerPort       = 80
-  hostNames              = ["crypterns.com"]
+  hostNames              = ["live.crypterns.com"]
   fixedResponseType      = "application/json"
   fixedResponseMessage   = "Success"
   fixedResponseStatus    = 200

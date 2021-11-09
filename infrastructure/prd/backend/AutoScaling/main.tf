@@ -7,7 +7,7 @@ module "cryptern-infra-backend-autoscaling" {
   instanceType           = "t3a.medium"
   instanceProfileName    = data.terraform_remote_state.cryptern-iam-data.outputs.instance-profile.name
   maxSize                = 10
-  minSize                = 1
+  minSize                = 4
   healthCheckGracePeriod = 300
   healthCheckType        = "ELB"
   privateSubnet          = [for subnet in data.terraform_remote_state.cryptern-infra-data.outputs.private-subnet : subnet.id]
