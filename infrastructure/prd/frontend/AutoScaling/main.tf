@@ -17,7 +17,7 @@ module "cryptern-infra-frontend-autoscaling" {
   frontendPorts           = [3000]
   appNames               = ["cryptern"]
   loadBalancerPort       = 80
-  hostNames              = ["live.crypterns.com"]
+  hostNames              = ["www.crypterns.com"]
   fixedResponseType      = "application/json"
   fixedResponseMessage   = "Success"
   fixedResponseStatus    = 200

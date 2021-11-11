@@ -7,9 +7,22 @@ resource "aws_ami_from_instance" "reference-instance-image-backend" {
 }
 resource "aws_launch_configuration" "launch-config-backend" {
   image_id             = aws_ami_from_instance.reference-instance-image-backend.id
-  instance_type        = var.instanceType
+  instance_type        = var.instanceType[0]
   security_groups      = var.privateSecurityGroupId
   name                 = "launch-config-backend.${var.env}"
+  iam_instance_profile = var.instanceProfileName
+  depends_on = [
+    aws_ami_from_instance.reference-instance-image-backend
+  ]
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+resource "aws_launch_configuration" "launch-config-backend-2" {
+  image_id             = aws_ami_from_instance.reference-instance-image-backend.id
+  instance_type        = var.instanceType[1]
+  security_groups      = var.privateSecurityGroupId
+  name                 = "launch-config-backend-2.${var.env}"
   iam_instance_profile = var.instanceProfileName
   depends_on = [
     aws_ami_from_instance.reference-instance-image-backend
@@ -87,11 +100,11 @@ resource "aws_autoscaling_group" "asg" {
   min_size                  = var.minSize
   health_check_grace_period = var.healthCheckGracePeriod
   health_check_type         = var.healthCheckType
-  launch_configuration      = aws_launch_configuration.launch-config-backend.name
+  launch_configuration      = aws_launch_configuration.launch-config-backend-2.name
   vpc_zone_identifier       = var.privateSubnet
   target_group_arns         = [for tg in aws_lb_target_group.backend-lb-tg : tg.arn]
   depends_on = [
-    aws_launch_configuration.launch-config-backend,
+    aws_launch_configuration.launch-config-backend-2,
     aws_lb_listener.backend-lb-tg-listener
   ]
   tags = [{
