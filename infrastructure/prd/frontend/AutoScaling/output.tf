@@ -1,9 +1,12 @@
+/*
+* REPLACE <project> WITH YOUR PROJECT NAME
+*/ 
 output "reference-instance-image-frontend" {
-  value = module.cryptern-infra-frontend-autoscaling.reference-instance-image-frontend
+  value = module.<project>-infra-frontend-autoscaling.reference-instance-image-frontend
 }
 output "asg" {
-  value = module.cryptern-infra-frontend-autoscaling.asg
+  value = module.<project>-infra-frontend-autoscaling.asg
 }
 output "targetGroup" {
-  value = module.cryptern-infra-frontend-autoscaling.targetGroup
+  value = module.<project>-infra-frontend-autoscaling.targetGroup
 }

@@ -86,3 +86,6 @@ variable "targetValue" {
 variable "disableScaleIn" {
   type = bool
 }
+variable "project" {
+  
+}

@@ -19,14 +19,14 @@ resource "aws_launch_configuration" "launch-config-frontend" {
   }
 }
 resource "aws_lb" "frontend-lb" {
-  name                       = "cryptern-frontend-lb-${var.env}"
+  name                       = "${var.project}-frontend-lb-${var.env}"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = var.publicSecurityGroupId
   subnets                    = var.publicSubnet
   enable_deletion_protection = false
   tags = {
-    "name" = "cryptern-frontend-lb.${var.env}"
+    "name" = "${var.project}-frontend-lb.${var.env}"
   }
 }
 resource "aws_lb_target_group" "frontend-lb-tg" {

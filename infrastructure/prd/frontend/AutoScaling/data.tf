@@ -1,30 +1,34 @@
-data "terraform_remote_state" "cryptern-infra-data" {
+/*
+* REPLACE <project> WITH YOUR PROJECT NAME
+* REPLACE <env> WITH CURRENT ENVIRONMENT. <env> = "prd" in this case
+*/ 
+data "terraform_remote_state" "<project>-infra-data" {
   backend = "s3"
   config = {
-    bucket         = "tf-remote-state.cryptern.prd"
-    key            = "infrastructure-cryptern.prd.tfstate"
-    dynamodb_table = "tf-remote-state-lock.cryptern.prd"
+    bucket         = "tf-remote-state.<project>.<env>"
+    key            = "infrastructure-<project>.<env>.tfstate"
+    dynamodb_table = "tf-remote-state-lock.<project>.<env>"
     region         = "us-east-1"
-    profile        = "cryptern"
+    profile        = "<project>"
   }
 }
-data "terraform_remote_state" "cryptern-iam-data" {
+data "terraform_remote_state" "<project>-iam-data" {
   backend = "s3"
   config = {
-    bucket         = "tf-remote-state.cryptern.prd"
-    key            = "iam-cryptern.prd.tfstate"
-    dynamodb_table = "tf-remote-state-lock.cryptern.prd"
+    bucket         = "tf-remote-state.<project>.<env>"
+    key            = "iam-<project>.<env>.tfstate"
+    dynamodb_table = "tf-remote-state-lock.<project>.<env>"
     region         = "us-east-1"
-    profile        = "cryptern"
+    profile        = "<project>"
   }
 }
-data "terraform_remote_state" "cryptern-static-frontend-data" {
+data "terraform_remote_state" "<project>-static-frontend-data" {
   backend = "s3"
   config = {
-    bucket         = "tf-remote-state.cryptern.prd"
-    key            = "infrastructure-cryptern-static-frontend.prd.tfstate"
-    dynamodb_table = "tf-remote-state-lock.cryptern.prd"
+    bucket         = "tf-remote-state.<project>.<env>"
+    key            = "infrastructure-<project>-static-frontend.<env>.tfstate"
+    dynamodb_table = "tf-remote-state-lock.<project>.<env>"
     region         = "us-east-1"
-    profile        = "cryptern"
+    profile        = "<project>"
   }
 }

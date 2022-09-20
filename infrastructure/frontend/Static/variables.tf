@@ -32,3 +32,6 @@ variable "cmsSite" {
 variable "indexDocument" {
   
 }
+variable "project" {
+  
+}
