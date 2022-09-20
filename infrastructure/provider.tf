@@ -1,4 +1,4 @@
 provider "aws" {
   region  = var.region
-  profile = "cryptern"
+  profile = <project> // CREATE AN AWS PROFILE WITH YOUR PROJECT NAME AND REPLACE IT
 }

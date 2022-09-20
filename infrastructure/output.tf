@@ -9,7 +9,7 @@ output "private-subnet" {
   value = aws_subnet.private
 }
 output "vpc" {
-  value = aws_vpc.cryptern-vpc.id
+  value = aws_vpc.<project>-vpc.id  // REPLACE <project> WITH YOUR PROJECT NAME
 }
 output "public-subnet" {
   value = aws_subnet.public

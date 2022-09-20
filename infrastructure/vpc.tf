@@ -1,7 +1,16 @@
-resource "aws_vpc" "cryptern-vpc" {
+/**
+*
+* INSTRUCTIONS BEFORE EXECUTION- 
+*   1) FIND(CTRL+F) <project> AND REPLACE IT WITH YOUR PROJECT NAME.
+*
+*/
+
+
+
+resource "aws_vpc" "<project>-vpc" {
   cidr_block = var.vpcCidrBlock
   tags = {
-    "name" = "cryptern-vpc.${var.env}"
+    "name" = "${var.project}-vpc.${var.env}"
   }
 }
 /*
@@ -10,15 +19,15 @@ resource "aws_vpc" "cryptern-vpc" {
 resource "aws_subnet" "private" {
   count                   = length(var.privateSubnets)
   availability_zone       = var.availabilityZones[count.index]
-  vpc_id                  = aws_vpc.cryptern-vpc.id
+  vpc_id                  = aws_vpc.<project>-vpc.id          
   cidr_block              = var.privateSubnets[count.index]
   map_public_ip_on_launch = false
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
 
   tags = {
-    "name" = "cryptern-private-subnet.${var.env}"
+    "name" = "${var.project}-private-subnet.${var.env}"
   }
 }
 /*
@@ -27,29 +36,29 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "public" {
   count                   = length(var.publicSubnets)
   availability_zone       = var.availabilityZones[count.index]
-  vpc_id                  = aws_vpc.cryptern-vpc.id
+  vpc_id                  = aws_vpc.<project>-vpc.id
   cidr_block              = var.publicSubnets[count.index]
   map_public_ip_on_launch = true
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
   tags = {
-    "name" = "cryptern-public-subnet.${var.env}"
+    "name" = "${var.project}-public-subnet.${var.env}"
   }
 }
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.cryptern-vpc.id
+  vpc_id = aws_vpc.<project>-vpc.id
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
   tags = {
-    name = "cryptern-igw.${var.env}"
+    name = "${var.project}-igw.${var.env}"
   }
 }
 resource "aws_eip" "nat-eip" {
   vpc = true
   tags = {
-    "name" = "cryptern-nat-eip.${var.env}"
+    "name" = "${var.project}-nat-eip.${var.env}"
   }
 }
 resource "aws_nat_gateway" "nat" {
@@ -61,7 +70,7 @@ resource "aws_nat_gateway" "nat" {
     aws_eip.nat-eip
   ]
   tags = {
-    name = "cryptern-nat.${var.env}"
+    name = "${var.project}-nat.${var.env}"
   }
 }
 
@@ -77,12 +86,12 @@ private subnet  ----- its route tabel ---- private route table   Destination ---
 */
 resource "aws_route_table" "public-route-table" {
   count  = length(var.publicSubnets)
-  vpc_id = aws_vpc.cryptern-vpc.id
+  vpc_id = aws_vpc.<project>-vpc.id
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
   tags = {
-    name = "cryptern-public-route-table.${var.env}"
+    name = "${var.project}-public-route-table.${var.env}"
   }
 }
 resource "aws_route" "public-igw-route" {
@@ -103,12 +112,12 @@ resource "aws_route_table_association" "public-subnet-route-table" {
 }
 resource "aws_route_table" "private-route-table" {
   count  = length(var.privateSubnets)
-  vpc_id = aws_vpc.cryptern-vpc.id
+  vpc_id = aws_vpc.<project>-vpc.id
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
   tags = {
-    name = "cryptern-private-route-table.${var.env}"
+    name = "${var.project}-private-route-table.${var.env}"
   }
 }
 resource "aws_route" "private-nat-route" {
@@ -127,10 +136,10 @@ resource "aws_route_table_association" "private-subnet-route-table" {
   route_table_id = element(aws_route_table.private-route-table, count.index).id
 }
 resource "aws_security_group" "private-sg" {
-  name   = "cryptern-private-sg.${var.env}"
-  vpc_id = aws_vpc.cryptern-vpc.id
+  name   = "${var.project}-private-sg.${var.env}"
+  vpc_id = aws_vpc.<project>-vpc.id
   depends_on = [
-    aws_vpc.cryptern-vpc,
+    aws_vpc.<project>-vpc,
     aws_security_group.public-sg
   ]
   egress = [{
@@ -156,14 +165,14 @@ resource "aws_security_group" "private-sg" {
     protocol         = "-1"
   }]
   tags = {
-    "name" = "cryptern-private-sg.${var.env}"
+    "name" = "${var.project}-private-sg.${var.env}"
   }
 }
 resource "aws_security_group" "public-sg" {
-  name   = "cryptern-public-sg.${var.env}"
-  vpc_id = aws_vpc.cryptern-vpc.id
+  name   = "${var.project}-public-sg.${var.env}"
+  vpc_id = aws_vpc.<project>-vpc.id
   depends_on = [
-    aws_vpc.cryptern-vpc
+    aws_vpc.<project>-vpc
   ]
   egress = [{
     description      = "Allow all outbound traffic"
@@ -188,7 +197,7 @@ resource "aws_security_group" "public-sg" {
     to_port          = 0
   }]
   tags = {
-    "name" = "cryptern-public-sg.${var.env}"
+    "name" = "${var.project}-public-sg.${var.env}"
   }
 }
 

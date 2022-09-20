@@ -23,3 +23,6 @@ variable "availabilityZones" {
 variable "vpcCidrBlock" {
 
 }
+variable "project" {
+  
+}

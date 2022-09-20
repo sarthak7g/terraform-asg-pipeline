@@ -8,6 +8,6 @@ resource "aws_instance" "jump-server" {
     aws_key_pair.deployer
   ]
   tags = {
-    "name" = "cryptern-jump-server.${var.env}"
+    "name" = "${var.project}-jump-server.${var.env}"
   }
 }
