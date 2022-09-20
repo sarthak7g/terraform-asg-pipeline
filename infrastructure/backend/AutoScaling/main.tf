@@ -32,14 +32,14 @@ resource "aws_launch_configuration" "launch-config-backend-2" {
   }
 }
 resource "aws_lb" "backend-lb" {
-  name                       = "cryptern-backend-lb-${var.env}"
+  name                       = "${var.project}-backend-lb-${var.env}"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = var.publicSecurityGroupId
   subnets                    = var.publicSubnet
   enable_deletion_protection = false
   tags = {
-    "name" = "cryptern-backend-lb.${var.env}"
+    "name" = "${var.project}-backend-lb.${var.env}"
   }
 }
 resource "aws_lb_target_group" "backend-lb-tg" {

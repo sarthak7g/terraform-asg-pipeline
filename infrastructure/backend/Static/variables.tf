@@ -29,3 +29,6 @@ variable "part" {
 variable "redisNodeType" {
 
 }
+variable "project" {
+  
+}

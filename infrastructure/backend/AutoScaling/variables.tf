@@ -89,3 +89,6 @@ variable "disableScaleIn" {
 variable "stickinessTime" {
 
 }
+variable "project" {
+  
+}

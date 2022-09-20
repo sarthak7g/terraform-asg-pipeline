@@ -1,3 +1,5 @@
+## REPLACE <project> WITH YOUR PROJECT NAME
+
 #!/bin/bash -xe
 
 ## Code Deploy Agent Bootstrap Script##
@@ -17,7 +19,7 @@ function installdep() {
         touch /etc/nginx/conf.d/api.conf
         cat <<EOF >>/etc/nginx/conf.d/api.conf
 server {
-    server_name  crypterns-api-dev.primathon.in;
+    server_name  <project>-api-dev.primathon.in;
 
 
     location / {
@@ -26,7 +28,7 @@ server {
 EOF
         cat <<EOF >>/etc/nginx/conf.d/chat.conf
 server {
-    server_name  crypterns-chat-dev.primathon.in;
+    server_name  <project>-chat-dev.primathon.in;
 
 
     location / {

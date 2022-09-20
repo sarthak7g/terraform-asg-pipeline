@@ -10,6 +10,6 @@ resource "aws_instance" "reference-instance-backend" {
     aws_key_pair.reference-backend
   ]
   tags = {
-    "name" = "cryptern-reference-instance-backend.${var.env}"
+    "name" = "${var.project}-reference-instance-backend.${var.env}"
   }
 }
