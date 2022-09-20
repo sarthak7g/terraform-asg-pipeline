@@ -21,7 +21,7 @@ resource "aws_iam_role" "admin-role" {
  Policy to read and write terraform state 
 */
 resource "aws_iam_policy" "terraform-state-rw" {
-  name        = "iam-state-rw.cryptern.${var.env}"
+  name        = "iam-state-rw.${var.project}.${var.env}"
   description = "Read/Write access to terraform state"
   policy = jsonencode({
     "Version" : "2012-10-17",
@@ -29,12 +29,12 @@ resource "aws_iam_policy" "terraform-state-rw" {
       {
         "Effect" : "Allow",
         "Action" : "s3:ListBucket",
-        "Resource" : "arn:aws:s3:::tf-remote-state.cryptern.${var.env}"
+        "Resource" : "arn:aws:s3:::tf-remote-state.${var.project}.${var.env}"
       },
       {
         "Effect" : "Allow",
         "Action" : ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
-        "Resource" : "arn:aws:s3:::tf-remote-state.cryptern.${var.env}/iam-cryptern.${var.env}.tfstate"
+        "Resource" : "arn:aws:s3:::tf-remote-state.${var.project}.${var.env}/iam-${var.project}.${var.env}.tfstate"
       },
       {
         "Effect" : "Allow",
@@ -43,7 +43,7 @@ resource "aws_iam_policy" "terraform-state-rw" {
           "dynamodb:PutItem",
           "dynamodb:DeleteItem"
         ],
-        "Resource" : "arn:aws:dynamodb:::table/tf-remote-state-lock.cryptern.${var.env}"
+        "Resource" : "arn:aws:dynamodb:::table/tf-remote-state-lock.${var.project}.${var.env}"
       }
     ]
   })
@@ -578,15 +578,15 @@ resource "aws_iam_role" "codebuild-frontend-role" {
   })
 }
 resource "aws_iam_policy" "codebuild-base-policy" {
-  name = "cryptern-codebuild-base-policy-${var.env}"
+  name = "${var.project}-codebuild-base-policy-${var.env}"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
       {
         "Effect" : "Allow",
         "Resource" : [
-          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/cryptern-codebuild-${var.env}",
-          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/cryptern-codebuild-${var.env}:*"
+          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.project}-codebuild-${var.env}",
+          "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.project}-codebuild-${var.env}:*"
         ],
         "Action" : [
           "logs:CreateLogGroup",
@@ -597,7 +597,7 @@ resource "aws_iam_policy" "codebuild-base-policy" {
       {
         "Effect" : "Allow",
         "Resource" : [
-          "arn:aws:s3:::codepipeline-cryptern-frontend-${var.env}*"
+          "arn:aws:s3:::codepipeline-${var.project}-frontend-${var.env}*"
         ],
         "Action" : [
           "s3:PutObject",
@@ -611,7 +611,7 @@ resource "aws_iam_policy" "codebuild-base-policy" {
   })
 }
 resource "aws_iam_policy" "codebuild-vpc-policy" {
-  name = "cryptern-codebuild-vpc-policy-${var.env}"
+  name = "${var.project}-codebuild-vpc-policy-${var.env}"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -683,10 +683,10 @@ resource "aws_iam_policy" "deployment-bucket-access-policy" {
         "Effect" : "Allow",
         "Action" : "s3:*",
         "Resource" : [
-          "arn:aws:s3:::deployment-cryptern-backend-${var.env}/*",
-          "arn:aws:s3:::deployment-cryptern-backend-${var.env}",
-          "arn:aws:s3:::deployment-cryptern-frontend-${var.env}/*",
-          "arn:aws:s3:::deployment-cryptern-frontend-${var.env}"
+          "arn:aws:s3:::deployment-${var.project}-backend-${var.env}/*",
+          "arn:aws:s3:::deployment-${var.project}-backend-${var.env}",
+          "arn:aws:s3:::deployment-${var.project}-frontend-${var.env}/*",
+          "arn:aws:s3:::deployment-${var.project}-frontend-${var.env}"
         ]
       }
     ]
