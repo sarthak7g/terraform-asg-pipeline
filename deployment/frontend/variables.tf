@@ -40,3 +40,6 @@ variable "privateSubnet" {
 variable "publicSecurityGroupId" {
 
 }
+variable "project" {
+
+}

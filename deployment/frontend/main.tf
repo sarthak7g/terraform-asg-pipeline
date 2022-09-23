@@ -1,10 +1,10 @@
 resource "aws_s3_bucket" "deployment-bucket" {
-  bucket = "deployment-cryptern-${var.part}-${var.env}"
+  bucket = "deployment-${var.project}-${var.part}-${var.env}"
   versioning {
     enabled = true
   }
   tags = {
-    "name" = "deployment-cryptern-${var.part}-${var.env}"
+    "name" = "deployment-${var.project}-${var.part}-${var.env}"
   }
 }
 resource "aws_s3_bucket_public_access_block" "deployment-bucket" {
@@ -16,12 +16,12 @@ resource "aws_s3_bucket_public_access_block" "deployment-bucket" {
   restrict_public_buckets = true
 }
 resource "aws_s3_bucket" "codepipeline-bucket" {
-  bucket = "codepipeline-cryptern-${var.part}-${var.env}"
+  bucket = "codepipeline-${var.project}-${var.part}-${var.env}"
   versioning {
     enabled = true
   }
   tags = {
-    "name" = "codepipeline-cryptern-${var.part}-${var.env}"
+    "name" = "codepipeline-${var.project}-${var.part}-${var.env}"
   }
 }
 resource "aws_s3_bucket_public_access_block" "codepipeline-bucket" {
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_public_access_block" "codepipeline-bucket" {
   restrict_public_buckets = true
 }
 resource "aws_codebuild_project" "codebuild-project" {
-  name          = "cryptern-codebuild-${var.env}"
+  name          = "${var.project}-codebuild-${var.env}"
   build_timeout = "60"
   service_role  = var.codeBuildRoleArn
 
@@ -75,18 +75,18 @@ resource "aws_codebuild_project" "codebuild-project" {
 
   }
   tags = {
-    "name"      = "cryptern-codebuild-${var.env}"
+    "name"      = "${var.project}-codebuild-${var.env}"
     "terraform" = "true"
   }
 }
 
 resource "aws_codedeploy_app" "codedeployapp" {
   compute_platform = "Server"
-  name             = "codedeploy-cryptern-${var.part}-${var.env}"
+  name             = "codedeploy-${var.project}-${var.part}-${var.env}"
 }
 resource "aws_codedeploy_deployment_group" "codedeploygroup" {
   app_name               = aws_codedeploy_app.codedeployapp.name
-  deployment_group_name  = "codedeploygroup-cryptern-${var.part}-${var.env}"
+  deployment_group_name  = "codedeploygroup-${var.project}-${var.part}-${var.env}"
   deployment_config_name = var.deploymentConfigName
   service_role_arn       = var.codeDeployRoleArn
   auto_rollback_configuration {
@@ -105,7 +105,7 @@ resource "aws_codedeploy_deployment_group" "codedeploygroup" {
   }
 }
 resource "aws_codepipeline" "codepipeline" {
-  name     = "codepipeline-cryptern-${var.part}-${var.env}"
+  name     = "codepipeline-${var.project}-${var.part}-${var.env}"
   role_arn = var.codepipelineRoleArn
   depends_on = [
     aws_s3_bucket.codepipeline-bucket,

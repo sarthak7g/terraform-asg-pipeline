@@ -25,3 +25,6 @@ variable "part" {
 variable "appZip" {
 
 }
+variable "project" {
+
+}
